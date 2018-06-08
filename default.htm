@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Emergency Services Bot</title>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.2.min.js"></script>
+    <link href="/Content/botchat.css" rel="stylesheet" />
+
+    <style>
+        #bot {
+            bottom: 20px;
+            left: 20px;
+            position: fixed;
+            width: 400px;
+            height:600px;
+            border: 2px solid #469c7d;
+        }
+    </style>
+
+
+</head>
+<body style="font-family:'Segoe UI'">
+    <h1>Emergency Services Bot Template</h1>
+    <p>A bot which provides a Question and Answer Service via web and mobile channels with Multi-lingual support. </p>
+    <p>Here are some handy links to get started:</p>
+    <p>
+        <ul>
+            <li><a href="https://docs.microsoft.com/en-us/bot-framework/dotnet/bot-builder-dotnet-overview">Get started building bots with .NET.</a></li>
+            <li><a href="https://github.com/toolboc/EmergencyServicesBot">Learn more about this template.</a></li>
+            <li><a href="https://qnamaker.ai/">Visit the QnA Maker portal.</a></li>
+            <li><a href="https://docs.microsoft.com/en-us/bot-framework/azure/azure-bot-service-continuous-deployment#set-up-continuous-deployment">Setup continuous deployment.</a></li>
+            <li><a href="https://docs.microsoft.com/en-us/bot-framework/debug-bots-emulator">Debug your bot.</a></li>
+        </ul>
+    </p>
+
+    <div id="bot" height="300" width="250">
+    </div>
+
+    <div class="show-bot-button" style="position: fixed; bottom: 33px; left:20px; display: block; height: 32px; border-radius: 15px; border: 1px solid #408080; width: 160px; background-color: #408080;">
+                    <div style="color:#FFFFFF; padding: 7px 32px" id="zlstxtcnt" class="zls_fltxtcnt">
+                        <b>Show Bot</b>
+                    </div>
+        </div>
+
+    <script src="/Scripts/botchat.js"></script>
+
+    <script>
+
+        var config;
+
+            $(document).ready(function () {
+                console.log('on load.');
+            fetch('/api/DirectLine', {
+                method: 'get'
+            }).then((response) => {
+                return response.json();
+            }).then((config) => {
+                console.log(config);
+
+                BotChat.App({
+                    directLine: { secret: config.directLineSecret},
+                    user: { id: '' },
+                    bot: { id: config.botName },
+                    resize: 'detect'
+                }, document.getElementById('bot'));
+
+                $('.show-bot-button').hide();
+
+                $('.show-bot-button').click(function () {
+                    $('#bot').show();
+                    $('.show-bot-button').hide();
+                });
+
+                $('.wc-header').click(function () {
+                    $('#bot').hide();
+                    $('.show-bot-button').show();
+                });
+
+            }).catch((err) => {
+                // Error :(
+                console.error(err);
+             });
+        });
+
+    </script>
+
+</body >
+</html >

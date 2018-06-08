@@ -1,0 +1,209 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "siteName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the web app that you wish to create."
+        }
+      },
+      "hostingPlanName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the App Service plan to use for hosting the web app."
+        }
+      },
+      "sku": {
+        "type": "string",
+        "allowedValues": [
+          "D1",
+          "B1",
+          "B2",
+          "B3",
+          "S1",
+          "S2",
+          "S3",
+          "P1",
+          "P2",
+          "P3",
+          "P4"
+        ],
+        "defaultValue": "B1",
+        "metadata": {
+          "description": "The pricing tier for the hosting plan."
+        }
+      },
+      "workerSize": {
+        "type": "string",
+        "allowedValues": [
+          "0",
+          "1",
+          "2"
+        ],
+        "defaultValue": "0",
+        "metadata": {
+          "description": "The instance size of the hosting plan (small, medium, or large)."
+        }
+      },
+      "repoURL": {
+        "type": "string",
+        "defaultValue": "https://github.com/HTBox/EmergencyServicesBot",
+        "metadata": {
+          "description": "The URL for the GitHub repository that contains the project to deploy."
+        }
+      },
+      "branch": {
+        "type": "string",
+        "defaultValue": "master",
+        "metadata": {
+          "description": "The branch of the GitHub repository to use."
+        }
+      },
+      "MicrosoftAppId": {
+        "type": "string",
+        "defaultValue": "<YOUR_APP_ID>",
+        "metadata": {
+          "description": "The name of the bot as displayed in the bot channel registration under settings => Configuration => Microsoft App Id"
+        }
+      },
+      "MicrosoftAppPassword": {
+        "type": "string",
+        "defaultValue": "<YOUR_APP_PASSWORD>",
+        "metadata": {
+          "description": "The password for your bot as displayed in the bot channel registration under settings => Configuration => manage"
+        }
+      },
+      "BotName": {
+        "type": "string",
+        "defaultValue": "<YOUR_BOT_NAME>",
+        "metadata": {
+          "description": "The name of your bot as displayed in the bot channel registration under settings => Bot handle"
+        }
+      },
+      "DirectlineSecret": {
+        "type": "string",
+        "defaultValue": "<YOUR_DIRECTLINE_SECRET>",
+        "metadata": {
+          "description": "Your bot's direct line secret as displayed in the bot channel registration under channels => direct line" 
+        }
+      },
+      "QnAendpoint": {
+        "type": "string",
+        "defaultValue": "https://westus.api.cognitive.microsoft.com/qnamaker/v2.0/knowledgebases/",
+        "metadata": {
+          "description": "The endpoint of your QnA service found in your created service @ qnamaker.ai under settings => Deployment Details"
+        }
+      },
+      "QnAKnowledgebaseId": {
+        "type": "string",
+        "defaultValue": "<YOUR_KNOWLEDGEBASE_ID>",
+        "metadata": {
+          "description": "The knowledgebase id of your QnA service found in your created service @ qnamaker.ai under settings => Deployment Details"
+        }
+      },
+      "QnASubscriptionKey": {
+        "type": "string",
+        "defaultValue": "<YOUR_QNA_SUBSCRIPTION_KEY>",
+        "metadata": {
+          "description": "The subscription key for your QnA service found in your created service @ qnamaker.ai under settings => Deployment Details"
+        }
+      },
+      "QnAKnowledgebaseLanguage": {
+        "type": "string",
+        "defaultValue": "en",
+        "metadata": {
+          "description": "The knowledge base language, set using a valid supported language code from https://docs.microsofttranslator.com/languages.html"
+        }
+      },
+      "QnAanswerThreshold": {
+        "type": "string",
+        "defaultValue": "30",
+        "metadata": {
+          "description": "Use this value to tune accuracy of found answers in the QnAKnowledgebase, higher values = higher accuracy"
+        }
+      },
+      "TranslatorEndpoint": {
+        "type": "string",
+        "defaultValue": "https://api.microsofttranslator.com/V2/Http.svc",
+        "metadata": {
+          "description": "The endpoint for the translator service, this value is unlikely to change"
+        }
+      },
+      "TranslatorApiKey": {
+        "type": "string",
+        "defaultValue": "<YOUR_TRANSLATOR_API_KEY>",
+        "metadata": {
+          "description": "The api key for your translation service"
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-08-01",
+        "name": "[parameters('hostingPlanName')]",
+        "type": "Microsoft.Web/serverfarms",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "[parameters('sku')]",
+          "capacity": "[parameters('workerSize')]"
+        },
+        "properties": {
+          "name": "[parameters('hostingPlanName')]"
+        }
+      },
+      {
+        "apiVersion": "2015-08-01",
+        "name": "[parameters('siteName')]",
+        "type": "Microsoft.Web/sites",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+        ],
+        "properties": {
+          "serverFarmId": "[parameters('hostingPlanName')]",
+          "siteConfig": {
+            "AlwaysOn": true
+        }
+        },
+        "resources": [
+          {
+            "apiVersion": "2015-08-01",
+            "name": "web",
+            "type": "sourcecontrols",
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]"
+            ],
+            "properties": {
+              "RepoUrl": "[parameters('repoURL')]",
+              "branch": "[parameters('branch')]",             
+              "IsManualIntegration": true,
+              "defaultDocuments": "index.js"
+            }
+          },
+          {
+            "apiVersion": "2015-08-01",
+            "name": "appsettings",
+            "type": "config",
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]"
+            ],
+            "properties": {
+                "WEBSITE_NODE_DEFAULT_VERSION" : "6.9.1",
+                "MicrosoftAppId" : "[parameters('MicrosoftAppId')]",
+                "MicrosoftAppPassword" : "[parameters('MicrosoftAppPassword')]",
+                "BotName" : "[parameters('BotName')]",
+                "DirectLineSecret" : "[parameters('DirectLineSecret')]",
+                "QnAendpoint" : "[parameters('QnAendpoint')]",
+                "QnAKnowledgebaseId" : "[parameters('QnAKnowledgebaseId')]",
+                "QnASubscriptionKey" : "[parameters('QnASubscriptionKey')]",
+                "QnAKnowledgebaseLanguage" : "[parameters('QnAKnowledgebaseLanguage')]",
+                "QnAanswerThreshold" : "[parameters('QnAanswerThreshold')]",
+                "TranslatorEndpoint" : "[parameters('TranslatorEndpoint')]",
+                "TranslatorApiKey" : "[parameters('TranslatorApiKey')]"
+            }           
+          }
+        ]
+      }
+    ]
+  }
