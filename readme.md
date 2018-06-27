@@ -1,10 +1,10 @@
 # Emergency Services Bot
 
-A bot designed to allow for rapid deployment of a question and answer service with support for multiple languages and accessible over web and SMS.
+A bot designed to allow for rapid deployment of a question and answer service with suport for multiple languages and accessible over web and SMS.
 
 ## Background
 
-Disaster response scenarios require time-critical response to provide relief to affected individuals.  Inspired by the aftermath of Hurricane Harvey, this project serves as a disaster response question and answer service to provide assistance for victims of natural disaster.  The service allows for an operator to quickly plug in question and answer responses into a knowledge base which become auto-translated to end users of the service. The project also provides out of box support for Web and SMS allowing for increased availability to individuals who may not have internet access. 
+Disaster response scenarios require time-critical response to provide relief to affected individuals.  Inspired by the aftermath of Hurricane Harvery, this project serves as a disaster reponse question and answer service to provide assistance for victims of natural disaster.  The service allows for an operator to quickly plug in question and answer responses into a knowledge base which become auto-translated to end users of the service. The project also provices out of box support for Web and SMS allowing for increased availability to individuals who may not have internet access. 
 
 ## Demo
 
@@ -69,7 +69,7 @@ In some steps you will be asked to obtain and save a key value pair.  Please be 
 
 5. Verify that you have a saved value for "QnAKnowledgebaseId", "QnASubscriptionKey", "BotName", "MicrosoftAppId", "MicrosoftAppPassword", and "DirectLineSecret"
     
-    Once you have all of these values, click the "Deploy to Azure" Button below and supply the values where indicated:
+    Once you have all of these [values](./Docs/azure-deploy-parameters.md), click the "Deploy to Azure" Button below and supply the values where indicated:
     
     [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
     
@@ -119,7 +119,7 @@ Within the include default.htm, there is an example of a landing page for the bo
 * Custom styling of the bot's look and feel are controlled by "/Content/botchat.css"
 * Custom bot behavior is controlled by "/Scripts/botchat.js"
 
-By modifying these files, you can give the bot a custom look and feel to accommodate your use case.
+By modifying these files, you can give the bot a custom look and feel to accomodate your use case.
 
 
 
