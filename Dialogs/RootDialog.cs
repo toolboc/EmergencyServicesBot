@@ -14,6 +14,7 @@ using System.Xml.Linq;
 using System.Configuration;
 using System.Net.Http;
 using System.Web;
+using System.Diagnostics;
 
 namespace EmergencyServicesBot.Dialogs
 {
@@ -22,11 +23,17 @@ namespace EmergencyServicesBot.Dialogs
     {
         static ResourceManager translateDialog = new ResourceManager("EmergencyServicesBot.Resources.Resources", Assembly.GetExecutingAssembly());
 
+        private const string enLanguageId = "en";
+        private const string esLanguageId = "es";
+        private const string frLanguageId = "fr";
+        private const string zhLanguageId = "zh-CN";
+        private const string userDataCultureKey = @"cultureInfo";
+
         //Set the language to be used; you can change this on-demand to change the langauage across the app
         //You will pass this everytime you request a value from the resx file
-        static CultureInfo ciEnglish = new CultureInfo("en-US");
-        static CultureInfo ciSpanish = new CultureInfo("es-US");
-        static CultureInfo ciChinese = new CultureInfo("zh-CN");
+        private static CultureInfo ciEnglish = new CultureInfo("en-US");
+        private static CultureInfo ciSpanish = new CultureInfo("es-US");
+        private static CultureInfo ciChinese = new CultureInfo("zh-CN");
 
         public async Task StartAsync(IDialogContext context)
         {
@@ -62,7 +69,7 @@ namespace EmergencyServicesBot.Dialogs
 
                 PromptDialog.Choice(context, UserChoiceMade, choices, welcomeMessage);
             }
-            
+
         }
 
         private static string[] GetMainMenuChoices(IDialogContext context)
@@ -89,43 +96,50 @@ namespace EmergencyServicesBot.Dialogs
                         var detectedLanguageXmlResponse = XDocument.Parse(await langDetectClient.GetStringAsync($@"{ConfigurationManager.AppSettings[@"TranslatorEndpoint"]}/Detect?text={HttpUtility.UrlEncode(userText)}"));
 
                         context.UserData.SetValue(@"userLanguage", detectedLanguageXmlResponse.Root.Value);
+                        var userCulture = GetCultureInfoFromLanguageId(detectedLanguageXmlResponse?.Root?.Value);
 
-                        if (detectedLanguageXmlResponse.Root.Value == "en")
-                        {
-                            context.UserData.SetValue(@"cultureInfo", ciEnglish);
-                        }
-                        else if (detectedLanguageXmlResponse.Root.Value == "es")
-                        {
-                            context.UserData.SetValue(@"cultureInfo", ciSpanish);
-                        }
-                        else if (detectedLanguageXmlResponse.Root.Value == "zh-CN")
-                        {
-                            context.UserData.SetValue(@"cultureInfo", ciChinese);
-                        }
-                        else { context.UserData.SetValue(@"cultureInfo", ciEnglish); }
-
-
+                        context.UserData.SetValue(userDataCultureKey, userCulture);
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Trace.TraceError($@"Error detecting language from inital user chat: {ex.ToString()}");
+                        Trace.TraceError($@"Error detecting language from inital user chat: {ex.ToString()}");
                     }
                 }
 
-                if (context.UserData.GetValue<String>("userLanguage") == "en")
-                {
-                    context.UserData.SetValue(@"cultureInfo", ciEnglish);
-                }
-                else if (context.UserData.GetValue<String>("userLanguage") == "es")
-                {
-                    context.UserData.SetValue(@"cultureInfo", ciSpanish);
-                }
-                else if (context.UserData.GetValue<String>("userLanguage") == "zh-CN")
-                {
-                    context.UserData.SetValue(@"cultureInfo", ciChinese);
-                }
-                else { context.UserData.SetValue(@"cultureInfo", ciEnglish); }
+
             }
+            else
+            {
+                var userCulture = GetCultureInfoFromLanguageId(userLanguage);
+
+                context.UserData.SetValue(userDataCultureKey, userCulture);
+            }
+        }
+
+        private CultureInfo GetCultureInfoFromLanguageId(string languageId)
+        {
+            if (string.IsNullOrWhiteSpace(languageId))
+            {
+                return ciEnglish;
+            }
+
+            CultureInfo userCulture = ciEnglish;
+
+            switch (languageId)
+            {
+                case esLanguageId:
+                    userCulture = ciSpanish;
+                    break;
+                case zhLanguageId:
+                    userCulture = ciChinese;
+                    break;
+                case enLanguageId:
+                default:
+                    userCulture = ciEnglish;
+                    break;
+            }
+
+            return userCulture;
         }
 
         private async Task UserChoiceMade(IDialogContext context, IAwaitable<string> result)
@@ -167,10 +181,10 @@ namespace EmergencyServicesBot.Dialogs
             ConnectorClient client = new ConnectorClient(new Uri(activity.ServiceUrl));
 
             var title = translateDialog.GetString("WelcomeTitle", ciEnglish);
-        
+
             IList<Attachment> cardsAttachment = new List<Attachment>();
             var reply = ((Activity)activity).CreateReply();
-            
+
             CardImage CI = new CardImage
             {
                 Url = translateDialog.GetString("WelcomeImageUrl", ciEnglish),
@@ -185,7 +199,7 @@ namespace EmergencyServicesBot.Dialogs
                 Images = new List<CardImage> { CI }
             };
 
-           
+
             cardsAttachment.Add(heroCard.ToAttachment());
 
             reply.Attachments = cardsAttachment;
@@ -204,6 +218,6 @@ namespace EmergencyServicesBot.Dialogs
         // Required: subscriptionKey, knowledgebaseId, 
         // Optional: defaultMessage, scoreThreshold[Range 0.0 – 1.0]
         public BasicQnAMakerDialog() : base(new QnAMakerService(new QnAMakerAttribute(Utils.GetAppSetting("QnASubscriptionKey"), Utils.GetAppSetting("QnAKnowledgebaseId"), "I could not find an answer to your question. Please try again or contact Houston 311.", 0.5)))
-        {}
+        { }
     }
 }
