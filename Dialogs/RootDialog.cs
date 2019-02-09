@@ -22,19 +22,9 @@ namespace EmergencyServicesBot.Dialogs
     public class RootDialog : IDialog<object>
     {
         static ResourceManager translateDialog = new ResourceManager("EmergencyServicesBot.Resources.Resources", Assembly.GetExecutingAssembly());
-
-        private const string enLanguageId = "en";
-        private const string esLanguageId = "es";
-        private const string frLanguageId = "fr";
-        private const string zhLanguageId = "zh-CN";
+              
         private const string userDataCultureKey = @"cultureInfo";
-
-        //Set the language to be used; you can change this on-demand to change the langauage across the app
-        //You will pass this everytime you request a value from the resx file
-        private static CultureInfo ciEnglish = new CultureInfo("en-US");
-        private static CultureInfo ciSpanish = new CultureInfo("es-US");
-        private static CultureInfo ciChinese = new CultureInfo("zh-CN");
-
+                      
         public async Task StartAsync(IDialogContext context)
         {
             /* Wait until the first message is received from the conversation and call MessageReceviedAsync 
@@ -120,22 +110,25 @@ namespace EmergencyServicesBot.Dialogs
         {
             if (string.IsNullOrWhiteSpace(languageId))
             {
-                return ciEnglish;
+                return LanguageConst.ciEnglish;
             }
 
-            CultureInfo userCulture = ciEnglish;
+            CultureInfo userCulture = LanguageConst.ciEnglish;
 
             switch (languageId)
             {
-                case esLanguageId:
-                    userCulture = ciSpanish;
+                case LanguageConst.esLanguageId:
+                    userCulture = LanguageConst.ciSpanish;
                     break;
-                case zhLanguageId:
-                    userCulture = ciChinese;
+                case LanguageConst.zhLanguageId:
+                    userCulture = LanguageConst.ciChinese;
                     break;
-                case enLanguageId:
+                case LanguageConst.frLanguageId:
+                    userCulture = LanguageConst.ciFrench;
+                    break;
+                case LanguageConst.enLanguageId:
                 default:
-                    userCulture = ciEnglish;
+                    userCulture = LanguageConst.ciEnglish;
                     break;
             }
 
@@ -180,14 +173,14 @@ namespace EmergencyServicesBot.Dialogs
 
             ConnectorClient client = new ConnectorClient(new Uri(activity.ServiceUrl));
 
-            var title = translateDialog.GetString("WelcomeTitle", ciEnglish);
+            var title = translateDialog.GetString("WelcomeTitle", LanguageConst.ciEnglish);
 
             IList<Attachment> cardsAttachment = new List<Attachment>();
             var reply = ((Activity)activity).CreateReply();
 
             CardImage CI = new CardImage
             {
-                Url = translateDialog.GetString("WelcomeImageUrl", ciEnglish),
+                Url = translateDialog.GetString("WelcomeImageUrl", LanguageConst.ciEnglish),
             };
 
 

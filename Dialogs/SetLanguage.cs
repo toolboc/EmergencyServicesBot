@@ -17,9 +17,7 @@ namespace EmergencyServicesBot.Dialogs
 
         //Set the language to be used; you can change this on-demand to change the langauage across the app
         //You will pass this everytime you request a value from the resx file
-        static CultureInfo ciEnglish = new CultureInfo("en-US");
-        static CultureInfo ciSpanish = new CultureInfo("es-US");
-        static CultureInfo ciChinese = new CultureInfo("zh-CN");
+       
 
         public async Task StartAsync(IDialogContext context)
         {
@@ -27,7 +25,7 @@ namespace EmergencyServicesBot.Dialogs
             string[] choices = new[] { @"English", @"Español", @"中文" };
             if (context.Activity.ChannelId == ChannelIds.Sms)
             {   // on SMS, communicate they can choose by replying with "1" or "2"
-                choices = new[] { @"1 - English", @"2 - Español", @"3 - 中文" };
+                choices = new[] { @"1 - English", @"2 - Español", @"3 - 中文", @"4 - French" };
             }
 
             PromptDialog.Choice(
@@ -48,25 +46,31 @@ namespace EmergencyServicesBot.Dialogs
             {
                 choice = "en";
                 selectedLanguage = "English";
-                culture = ciEnglish;
+                culture = LanguageConst.ciEnglish;
             }
             else if (choice.IndexOf(@"español", 0, StringComparison.OrdinalIgnoreCase) != -1)
             {
                 choice = "es";
                 selectedLanguage = "Español";
-                culture = ciSpanish;
+                culture = LanguageConst.ciSpanish;
             }
             else if (choice.IndexOf(@"中文", 0, StringComparison.OrdinalIgnoreCase) != -1)
             {
                 choice = "zh-CN";
                 selectedLanguage = "中文";
-                culture = ciChinese;
+                culture = LanguageConst.ciChinese;
+            }
+            else if (choice.IndexOf(@"French", 0, StringComparison.OrdinalIgnoreCase) != -1)
+            {
+                choice = LanguageConst.frLanguageId;
+                selectedLanguage = "French";
+                culture = LanguageConst.ciChinese;
             }
             else
             {
                 choice = "en";
                 selectedLanguage = "English";
-                culture = ciEnglish;
+                culture = LanguageConst.ciEnglish;
             }
 
             context.UserData.SetValue(@"userLanguage", choice);
