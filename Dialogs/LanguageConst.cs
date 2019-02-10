@@ -25,7 +25,7 @@ namespace EmergencyServicesBot.Dialogs
         internal const string enLanguageName = "English";
         internal const string esLanguageName = "Español";
         internal const string zhLanguageName = "中文";
-        internal const string frLanguageName = "French";
+        internal const string frLanguageName = "Français";
 
         internal static readonly string[] languages = new[] { enLanguageName, esLanguageName, zhLanguageName, frLanguageName };
         internal static readonly string[] smsLanguages = new[] { $"1 -{enLanguageName}", $"2 -{esLanguageName}", $"3 -{zhLanguageName}", $"4 -{frLanguageName}" };
