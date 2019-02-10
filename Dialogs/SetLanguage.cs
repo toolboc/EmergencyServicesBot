@@ -57,7 +57,7 @@ namespace EmergencyServicesBot.Dialogs
             {
                 choice = LanguageConst.frLanguageId;
                 selectedLanguage = LanguageConst.frLanguageName;
-                culture = LanguageConst.ciChinese;
+                culture = LanguageConst.ciFrench;
             }
             else
             {
