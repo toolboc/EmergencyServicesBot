@@ -139,12 +139,15 @@ namespace EmergencyServicesBot.Dialogs
         {
             var choice = await result;
 
+            //TODO change with resource entry directly
             if ((choice.IndexOf(@"get answers", 0, StringComparison.OrdinalIgnoreCase) != -1) ||
                 (choice.IndexOf(@"Obtener Respuestas", 0, StringComparison.OrdinalIgnoreCase) != -1) ||
+                (choice.IndexOf(@"Obtenir les réponses", 0, StringComparison.OrdinalIgnoreCase) != -1) ||                
                 (choice.IndexOf(@"其他问题", 0, StringComparison.OrdinalIgnoreCase) != -1))
                 context.Call(new QandADialog(), DoneWithSubdialog);
             else if ((choice.IndexOf(@"Select language", 0, StringComparison.OrdinalIgnoreCase) != -1) ||
                 (choice.IndexOf(@"Seleccione el idioma", 0, StringComparison.OrdinalIgnoreCase) != -1) ||
+                (choice.IndexOf(@"Sélectionner la langue", 0, StringComparison.OrdinalIgnoreCase) != -1) ||
                 (choice.IndexOf(@"选择语言", 0, StringComparison.OrdinalIgnoreCase) != -1))
                 context.Call(new SetLanguage(), DoneWithSubdialog);
         }
@@ -183,12 +186,12 @@ namespace EmergencyServicesBot.Dialogs
                 Url = translateDialog.GetString("WelcomeImageUrl", LanguageConst.ciEnglish),
             };
 
-
+            //TODO change by adding resources instead of hardcoded text
             var heroCard = new HeroCard
             {
                 Title = title,
-                Subtitle = "Hello. Hola. 你好.",
-                Text = "Say \"hi\" to begin, diga \"hola\" para comenzar, 说“嗨”开始",
+                Subtitle = "Hello. Hola. 你好. Bonjour.",
+                Text = "Say \"hi\" to begin, diga \"hola\" para comenzar, 说“嗨”开始, dites \"Bonjour\" pour commencer",
                 Images = new List<CardImage> { CI }
             };
 
