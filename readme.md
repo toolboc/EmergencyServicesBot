@@ -12,10 +12,10 @@ Try a live demonstration of the Emergency Services Bot by visiting https://emerg
 
 ## Prerequisites
 
-1.  An active [Microsoft Azure Subscription](http://azure.com)
+1.  An active [Microsoft Azure Subscription](https://azure.com/?WT.mc_id=iot-0000-pdecarlo)
 2.  A registered bot at [botframework.com](https://dev.botframework.com/) 
 3.  An active QnA Service from [qnamaker.ai](http://qnamaker.ai)
-4.  An active [Translator Text API Key](https://www.microsoft.com/en-us/translator)
+4.  An active [Translator Text API Key](https://www.microsoft.com/translator?WT.mc_id=iot-0000-pdecarlo)
 
 ## QuickStart
 
@@ -23,7 +23,7 @@ In some steps you will be asked to obtain and save a key value pair.  Please be 
 
 1. Create or use an existing Azure Subscription 
     
-    Free subscriptions can be obtained @ https://azure.microsoft.com/en-us/free/
+    Free subscriptions can be obtained @ https://azure.microsoft.com/free/?WT.mc_id=iot-0000-pdecarlo
 
 2. Create an active QnA Service at [qnamaker.ai](http://qnamaker.ai)
     
@@ -43,7 +43,7 @@ In some steps you will be asked to obtain and save a key value pair.  Please be 
 
     <img src="/Assets/GetQnAKeys.PNG">
 
-3.  Create a Translator Text API Service @ http://azure.com 
+3.  Create a Translator Text API Service @ https://azure.com/?WT.mc_id=iot-0000-pdecarlo 
     
      <img src="/Assets/TranslatorTextRegistration.PNG">-
     
@@ -95,9 +95,9 @@ In some steps you will be asked to obtain and save a key value pair.  Please be 
 
 ## Enable Mobile SMS Channel
 
-To enable SMS messaging with the bot, follow the instructions @ https://docs.microsoft.com/en-us/bot-framework/bot-service-channel-connect-twilio
+To enable SMS messaging with the bot, follow the instructions @ https://docs.microsoft.com/bot-framework/bot-service-channel-connect-twilio?WT.mc_id=iot-0000-pdecarlo
 
-For other channels, see: https://docs.microsoft.com/en-us/bot-framework/bot-service-manage-channels
+For other channels, see: https://docs.microsoft.com/bot-framework/bot-service-manage-channels?WT.mc_id=iot-0000-pdecarlo
 
 ## Developing Locally in Visual Studio
 
